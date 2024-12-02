@@ -2,6 +2,7 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "htmlWhitespaceSensitivity": "css",
+  "autoformat": true,
   "insertPragma": false,
   "jsxSingleQuote": false,
   "printWidth": 100,
@@ -14,5 +15,5 @@
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "all",
-  "useTabs": false
+  "useTabs": true
 }
