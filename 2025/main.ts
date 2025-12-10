@@ -57,4 +57,55 @@ const day1 = async (): Promise<void> => {
 	console.log('totalZeroCounter: ', totalZeroCounter);
 };
 
-day1();
+const day2 = async (): Promise<void> => {
+	const data: string = await readFile('day2.txt', 'utf8');
+	const dataArr: string[] = data.split(',');
+	const invalidIds: number[] = [];
+	let invalidIdCount: number = 0;
+
+	dataArr.forEach((dataSet: string) => {
+		const lowEnd: number = parseInt(dataSet.split('-')[0]);
+		const highEnd: number = parseInt(dataSet.split('-')[1]);
+
+		const part1 = () => {
+			for (let i = lowEnd; i <= highEnd; i++) {
+				const numString: string = i.toString();
+
+				if (numString.length % 2 !== 0) continue;
+
+				const midPoint: number = numString.length / 2;
+
+				const firstHalfOfNumString: string = numString.slice(0, midPoint);
+				const secondHalfOfNumString: string = numString.slice(midPoint);
+				if (firstHalfOfNumString === secondHalfOfNumString) invalidIds.push(i);
+			}
+		};
+
+		const part2 = () => {
+			for (let i = lowEnd; i <= highEnd; i++) {
+				const indexNumString = i.toString();
+
+				for (let j = 1; j <= Math.floor(indexNumString.length / 2); j++) {
+					if (indexNumString.length % j !== 0) continue;
+					const slice = indexNumString.slice(0, j);
+					const numOfTimesToRepeat = indexNumString.length / j;
+
+					if (slice.repeat(numOfTimesToRepeat) === indexNumString) {
+						invalidIds.push(i);
+						break;
+					}
+				}
+			}
+		};
+		// part1();
+		part2();
+	});
+
+	invalidIds.forEach((id) => {
+		invalidIdCount += id;
+	});
+	console.log('invalidIdCount: ', invalidIdCount);
+};
+
+// day1();
+day2();
