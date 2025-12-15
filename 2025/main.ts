@@ -159,6 +159,69 @@ const day3 = async (): Promise<void> => {
 	part2();
 };
 
+const toiletRollChecker = (cell: string): number => {
+	return cell === '@' ? 1 : 0;
+};
+
+const day4 = async (): Promise<void> => {
+	const data: string = await readFile('day4.txt', 'utf8');
+	const dataArr: string[] = data.split('\n');
+	const part1 = () => {
+		let total = 0;
+		dataArr.forEach((row, i) => {
+			const rowArr = row.split('');
+			let rowAbove: string[] = [];
+			let rowBelow: string[] = [];
+			if (i !== 0) {
+				rowAbove = dataArr[i - 1].split('');
+			}
+
+			if (i !== dataArr.length - 1) {
+				rowBelow = dataArr[i + 1].split('');
+			}
+
+			for (let j = 0; j < rowArr.length; j++) {
+				let count = 0;
+				// check row above
+				if (rowAbove.length > 0) {
+					count += toiletRollChecker(rowAbove[j]);
+					if (j !== 0) {
+						count += toiletRollChecker(rowAbove[j - 1]);
+					}
+					if (j !== rowArr.length - 1) {
+						count += toiletRollChecker(rowAbove[j + 1]);
+					}
+				}
+				// check row below
+				if (rowBelow.length > 0) {
+					count += toiletRollChecker(rowBelow[j]);
+					if (j !== 0) {
+						count += toiletRollChecker(rowBelow[j - 1]);
+					}
+
+					if (j !== rowArr.length - 1) {
+						count += toiletRollChecker(rowBelow[j + 1]);
+					}
+				}
+				// check sides
+				if (j !== 0) {
+					count += toiletRollChecker(row[j - 1]);
+				}
+
+				if (j !== rowArr.length - 1) {
+					count += toiletRollChecker(row[j + 1]);
+				}
+				console.log(count);
+				if (count < 4 && rowArr[j] === '@') total++;
+			}
+		});
+		console.log('total: ', total);
+	};
+
+	part1();
+};
+
 // day1();
 // day2();
-day3();
+// day3();
+day4();
