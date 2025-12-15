@@ -166,6 +166,59 @@ const toiletRollChecker = (cell: string): number => {
 const day4 = async (): Promise<void> => {
 	const data: string = await readFile('day4.txt', 'utf8');
 	const dataArr: string[] = data.split('\n');
+	const grid = dataArr.map((row) => row.split(''));
+
+	const findAccessibleRolls = (grid: string[][]): number[][] => {
+		const accessibleRolls: number[][] = [];
+		grid.forEach((row, i) => {
+			let rowAbove: string[] = [];
+			let rowBelow: string[] = [];
+			if (i !== 0) {
+				rowAbove = grid[i - 1];
+			}
+
+			if (i !== grid.length - 1) {
+				rowBelow = grid[i + 1];
+			}
+
+			for (let j = 0; j < row.length; j++) {
+				let count = 0;
+				// check row above
+				if (rowAbove.length > 0) {
+					count += toiletRollChecker(rowAbove[j]);
+					if (j !== 0) {
+						count += toiletRollChecker(rowAbove[j - 1]);
+					}
+					if (j !== row.length - 1) {
+						count += toiletRollChecker(rowAbove[j + 1]);
+					}
+				}
+				// check row below
+				if (rowBelow.length > 0) {
+					count += toiletRollChecker(rowBelow[j]);
+					if (j !== 0) {
+						count += toiletRollChecker(rowBelow[j - 1]);
+					}
+
+					if (j !== row.length - 1) {
+						count += toiletRollChecker(rowBelow[j + 1]);
+					}
+				}
+				// check sides
+				if (j !== 0) {
+					count += toiletRollChecker(row[j - 1]);
+				}
+
+				if (j !== row.length - 1) {
+					count += toiletRollChecker(row[j + 1]);
+				}
+
+				if (count < 4 && row[j] === '@') accessibleRolls.push([i, j]);
+			}
+		});
+		return accessibleRolls;
+	};
+
 	const part1 = () => {
 		let total = 0;
 		dataArr.forEach((row, i) => {
@@ -218,7 +271,28 @@ const day4 = async (): Promise<void> => {
 		console.log('total: ', total);
 	};
 
-	part1();
+	const part2 = () => {
+		let totalRemoved = 0;
+
+		while (true) {
+			const accessibleRolls = findAccessibleRolls(grid);
+
+			if (accessibleRolls.length === 0) {
+				break;
+			}
+
+			accessibleRolls.forEach((rollLocation) => {
+				grid[rollLocation[0]][rollLocation[1]] = '.';
+			});
+
+			totalRemoved += accessibleRolls.length;
+		}
+
+		console.log(totalRemoved);
+	};
+
+	// part1();
+	part2();
 };
 
 // day1();
