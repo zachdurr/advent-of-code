@@ -107,5 +107,58 @@ const day2 = async (): Promise<void> => {
 	console.log('invalidIdCount: ', invalidIdCount);
 };
 
+const day3 = async (): Promise<void> => {
+	const data: string = await readFile('day3.txt', 'utf8');
+	const dataArr: string[] = data.split('\n');
+	const part1 = () => {
+		let sum = 0;
+		dataArr.forEach((string) => {
+			let val1 = '0';
+			let val2 = '0';
+			const arr = string.split('');
+			for (let i = 0; i < arr.length; i++) {
+				let charInt = parseInt(arr[i]);
+				let charVal1 = parseInt(val1);
+				let charVal2 = parseInt(val2);
+				if (charInt > charVal1 && i !== arr.length - 1) {
+					val1 = arr[i];
+					val2 = arr[i + 1];
+				} else if (charInt > charVal2) {
+					val2 = arr[i];
+				}
+			}
+			sum += parseInt(val1.concat(val2));
+			console.log(sum);
+		});
+		console.log(sum);
+	};
+	const part2 = () => {
+		let sum = 0;
+		dataArr.forEach((subset) => {
+			let result = '';
+			let currentIndex = 0;
+			const subsetArr = subset.split('');
+			for (let i = 0; i < 12; i++) {
+				let bestDigit = '0';
+				let bestPosition = currentIndex;
+				const maxSearchIndex = subsetArr.length - (12 - i);
+				for (let j = currentIndex; j <= maxSearchIndex; j++) {
+					if (parseInt(subsetArr[j]) > parseInt(bestDigit)) {
+						bestDigit = subsetArr[j];
+						bestPosition = j;
+					}
+				}
+				result += bestDigit;
+				currentIndex = bestPosition + 1;
+			}
+			console.log('result', result);
+			sum += parseInt(result);
+		});
+		console.log('total', sum);
+	};
+	part2();
+};
+
 // day1();
-day2();
+// day2();
+day3();
